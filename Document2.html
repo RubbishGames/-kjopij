@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Square Spawning Game</title>
+    <style>
+        .square {
+            width: 50px;
+            height: 50px;
+            background-color: blue;
+            margin: 5px;
+            display: inline-block;
+            text-align: center;
+            line-height: 50px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Square Spawning Game</h1>
+    <p>Click the squares as quickly as possible!</p>
+    <button id="startButton">Start Game</button>
+    <p>Score: <span id="score">0</span></p>
+    <p>Time Left: <span id="timeLeft">30</span> seconds</p>
+    <div id="squareContainer"></div>
+
+    <script>
+        let isGameActive = false;
+        let score = 0;
+        let timeLeft = 30;
+        let timer;
+
+        // Function to create a new square and add it to the container
+        function createSquare() {
+            const squareContainer = document.getElementById("squareContainer");
+            const square = document.createElement("div");
+            square.className = "square";
+            square.innerText = score + 1;
+            square.addEventListener("click", () => {
+                if (isGameActive) {
+                    score++;
+                    updateScore();
+                    squareContainer.removeChild(square);
+                    createSquare();
+                }
+            });
+            squareContainer.appendChild(square);
+        }
+
+        // Function to start the game
+        function startGame() {
+            if (!isGameActive) {
+                isGameActive = true;
+                score = 0;
+                timeLeft = 30;
+                updateScore();
+                updateTimeLeft();
+                document.getElementById("squareContainer").innerHTML = "";
+                createSquare();
+                timer = setInterval(updateTime, 1000);
+            }
+        }
+
+        // Function to update the score display
+        function updateScore() {
+            document.getElementById("score").textContent = score;
+        }
+
+        // Function to update the time left display
+        function updateTimeLeft() {
+            document.getElementById("timeLeft").textContent = timeLeft + " seconds";
+        }
+
+        // Function to update the timer
+        function updateTime() {
+            timeLeft--;
+            updateTimeLeft();
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }
+
+        // Function to end the game
+        function endGame() {
+            isGameActive = false;
+            clearInterval(timer);
+            alert("Game Over! Your Score: " + score);
+        }
+
+        // Attach click event listeners to buttons
+        document.getElementById("startButton").addEventListener("click", startGame);
+    </script>
+</body>
+</html>
